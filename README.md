@@ -1,6 +1,7 @@
 # Introduction
 
 This a PoC for encapsulating HTTP responses on Cardano chain that can be retrieved via cardano-graphql using custom `cardano+metadata://$TX_ID?network=$NETWORK&key=$METADATUM_LABEL&type=http-response`
+It defaults to use [dandelion.link's](https://gimbalabs.com/#/open-source-apis/graphql-api) `cardano-graphql` deployments.
 
 I currently have tested using nodejs, but should build and work on browsers :shrug:
 
