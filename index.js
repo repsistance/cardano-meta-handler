@@ -6,8 +6,8 @@ import btoa from 'btoa'
 import fs from 'fs'
 import mime from 'mime-types'
 
-var MockAdapter = require("axios-mock-adapter")
 const HTTP_RESPONSE_METADATUM = 104116116112
+var MockAdapter = require("axios-mock-adapter")
 var grapqhlEndpoint = ''
 
 function getGraphqlUrl(network) {
@@ -89,33 +89,34 @@ export async function get(uri) {
       if ( ! metadata.headers ) {
           response = [500]
       } else {
+        if ( metadata.headers['Content-Transfer-Encoding'] == "base64" ) {
+          strData = atob(jointData)
+        } else {
+          strData = jointData
+        }
   
-          if ( metadata.headers['Content-Transfer-Encoding'] == "base64" ) {
-              strData = atob(jointData)
-          } else {
-              strData = jointData
-          }
+        if ( metadata.headers['Content-Encoding'] == "gzip" ) {
+          var charData = strData.split('').map(function(x){return x.charCodeAt(0);})
+          var binData  = new Uint8Array(charData)
+          var inflatedData = pako.inflate(binData)
+          responseData = String.fromCharCode.apply(null, new Uint16Array(inflatedData))
+        } else {
+          responseData = strData
+        }
   
-          if ( metadata.headers['Content-Encoding'] == "gzip" ) {
-              var charData = strData.split('').map(function(x){return x.charCodeAt(0);})
-              var binData  = new Uint8Array(charData)
-              var inflatedData = pako.inflate(binData)
-              responseData = String.fromCharCode.apply(null, new Uint16Array(inflatedData))
-          } else {
-              responseData = strData
-          }
-  
-          if ( responseData ) {
-              response = [200, responseData, metadata.headers]
-          } else {
-              response = [204, "", metadata.headers]
-          }
-          mock.onGet(uri).reply(function() {
-            return response
-          })
-          var axiosResponse = await axios.get(uri)
-          
-          return axiosResponse
+        if ( responseData ) {
+          response = [200, responseData, metadata.headers]
+        } else {
+          response = [204, "", metadata.headers]
+        }
+
+        mock.onGet(uri).reply(function() {
+          return response
+        })
+
+        var axiosResponse = await axios.get(uri)
+
+        return axiosResponse
       }
       break
     default:
@@ -128,5 +129,3 @@ export default {
   get,
   getMetadataFromTxId
 }
-
-

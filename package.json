@@ -1,14 +1,14 @@
 {
-  "name": "cardano-meta-handler",
+  "name": "@repsistance/cardano-meta-handler",
   "version": "0.0.1",
-  "description": "",
+  "description": "This a PoC for encapsulating HTTP responses on Cardano chain that can be retrieved via cardano-graphql using custom `cardano+metadata://$TX_ID?network=$NETWORK&key=$METADATUM_LABEL&type=http-response` It defaults to use [dandelion.link's](https://gimbalabs.com/#/open-source-apis/graphql-api) `cardano-graphql` deployments.",
   "main": "index.js",
   "scripts": {
     "build": "babel index.js -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "L͎a͎ ͎R͎e͎p͎s͎i͎s͎t͎a͎n͎c͎E͎",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
@@ -27,5 +27,23 @@
     "openpgp": "^4.10.9",
     "pako": "^2.0.3",
     "parse-uri": "^1.0.3"
-  }
+  },
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/repsistance/cardano-meta-handler.git"
+  },
+  "keywords": [
+    "cardano",
+    "metadata",
+    "uri",
+    "handler"
+  ],
+  "bugs": {
+    "url": "https://github.com/repsistance/cardano-meta-handler/issues"
+  },
+  "homepage": "https://github.com/repsistance/cardano-meta-handler#readme"
 }

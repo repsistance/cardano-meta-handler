@@ -1,7 +1,9 @@
-# Introduction
+# Overview
 
-This a PoC for encapsulating HTTP responses on Cardano chain that can be retrieved via cardano-graphql using custom `cardano+metadata://$TX_ID?network=$NETWORK&key=$METADATUM_LABEL&type=http-response`
-It defaults to use [dandelion.link's](https://gimbalabs.com/#/open-source-apis/graphql-api) `cardano-graphql` deployments.
+This a PoC for encapsulating HTTP responses on Cardano chain that can be retrieved via cardano-graphql using custom `cardano+metadata://$TX_ID?network=$NETWORK&key=$METADATUM_LABEL&type=http-response`. 
+`type=http-response` is an optional parameter that allows the library to parse the metadata JSON object as if it were an actual HTTP response and then, return a mocked axios response [(more info here)](https://github.com/repsistance/cardano-meta-handler/blob/main/examples/examples.js#L4). If it's not parsed, the plain JSON object is returned "as it is" on-chain.
+
+It defaults to use [dandelion.link's](https://gimbalabs.com/#/open-source-apis/graphql-api) `cardano-graphql` deployments that can be overriden passing a valid URL via `graphql` query string parameter.
 
 I currently have tested using nodejs, but should build and work on browsers :shrug:
 
@@ -33,4 +35,4 @@ node examples/build-txmeta-from-file.js
 node examples/build-txmeta-from-weburl.js
 ```
 
-Check [examples/examples.js] for some comments. 
+Check [examples](examples/examples.js) for some comments. 
