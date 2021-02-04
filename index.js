@@ -75,9 +75,20 @@ export async function get(uri) {
   if ( parsedUri.queryKey['graphql'] ) { 
     grapqhlEndpoint = parsedUri.queryKey['graphql']
   } else {
-    grapqhlEndpoint = getGraphqlUrl(parsedUri.queryKey['network'])
+    if ( parsedUri.queryKey['network'] ) {
+      grapqhlEndpoint = getGraphqlUrl(parsedUri.queryKey['network'])
+    }
   }
-  const metadata = await getMetadataFromTxId(parsedUri.authority, parsedUri.queryKey.key, grapqhlEndpoint)
+
+  var metadata
+  switch (parsedUri.protocol) {
+    case 'file':
+      metadata = JSON.parse(fs.readFileSync(parsedUri.path, 'utf-8'))[HTTP_RESPONSE_METADATUM]
+      break
+    default:
+      metadata = await getMetadataFromTxId(parsedUri.authority, parsedUri.queryKey.key, grapqhlEndpoint)
+  }
+
   switch (parsedUri.queryKey['type']) {
     case 'http-response':
       var mock = new MockAdapter(axios)
@@ -115,6 +126,8 @@ export async function get(uri) {
         })
 
         var axiosResponse = await axios.get(uri)
+
+        mock.restore()
 
         return axiosResponse
       }
