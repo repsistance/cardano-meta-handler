@@ -155,3 +155,6 @@ export default {
   get,
   getMetadataFromTxId
 }
+
+export * as Fetch from './fetch'
+export * from './models'

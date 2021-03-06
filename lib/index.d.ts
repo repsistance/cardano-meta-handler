@@ -9,4 +9,6 @@ declare const _default: {
     getMetadataFromTxId: typeof getMetadataFromTxId;
 };
 export default _default;
+export * as Fetch from './fetch';
+export * from './models';
 //# sourceMappingURL=index.d.ts.map
