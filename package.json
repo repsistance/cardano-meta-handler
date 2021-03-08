@@ -1,6 +1,6 @@
 {
   "name": "@repsistance/cardano-meta-handler",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This a PoC for encapsulating HTTP responses on Cardano chain that can be retrieved via cardano-graphql using custom `cardano+metadata://$TX_ID?network=$NETWORK&key=$METADATUM_LABEL&type=http-response` It defaults to use [dandelion.link's](https://gimbalabs.com/#/open-source-apis/graphql-api) `cardano-graphql` deployments.",
   "main": "index.js",
   "scripts": {
