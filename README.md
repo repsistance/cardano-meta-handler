@@ -1,6 +1,6 @@
 # Overview
 
-This a PoC for encapsulating HTTP responses on Cardano chain that can be retrieved via cardano-graphql using custom `cardano+metadata://$TX_ID?network=$NETWORK&key=$METADATUM_LABEL&type=http-response`.
+This a PoC for encapsulating HTTP responses on Cardano chain that can be retrieved via cardano-graphql using custom URI `cardano+metadata://$TX_ID?network=$NETWORK&key=$METADATUM_LABEL&type=http-response`.
 
 `type=http-response` is an optional parameter that allows the library to parse the metadata JSON object as if it were an actual HTTP response and then, return a mocked axios response [(more info here)](https://github.com/repsistance/cardano-meta-handler/blob/main/examples/examples.js#L4). If it's not parsed, the plain JSON object is returned "as it is" on-chain.
 
@@ -11,6 +11,7 @@ I currently have tested using nodejs, but should build and work on browsers :shr
 # Build
 
 ```
+npm install
 npm run build
 ```
 
