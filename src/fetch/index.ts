@@ -1,7 +1,8 @@
+import { dandelionGraphQLURI } from "..";
 
 export const dandelionGQL = ( network : 'testnet' | 'mainnet' ) => (
 	( query : string ) => (
-		fetch( `https://graphql-api.${network}.dandelion.link/`, {
+		fetch( dandelionGraphQLURI( network ), {
 			method : 'POST',
 			body: JSON.stringify( { query : query.trim(), operationName: null, variables: {} } ),
 			headers: {

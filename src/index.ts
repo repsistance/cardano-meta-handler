@@ -12,9 +12,9 @@ const HTTP_RESPONSE_METADATUM = 104116116112
 
 import MockAdapter from 'axios-mock-adapter'
 
-export const getGraphqlUrl = ( network : string ) => {
-    return `https://graphql-api.${network}.dandelion.link/`
-}
+export const dandelionGraphQLURI = ( network : 'testnet' | 'mainnet' ) => (
+  `https://graphql-api.${network}.dandelion.link/`
+)
 
 const chunkArray = ( arr : string, size : number ) => {
     var myArray = []
@@ -90,7 +90,7 @@ export async function get( uri : string ) {
 		grapqhlEndpoint = parsedUri.queryKey['graphql']
 	} else {
 		if ( parsedUri.queryKey['network'] ) {
-			grapqhlEndpoint = getGraphqlUrl(parsedUri.queryKey['network'])
+			grapqhlEndpoint = dandelionGraphQLURI(parsedUri.queryKey['network'])
 		}
   	}
 
