@@ -34,13 +34,3 @@ type Block = {
 }
 
 export type Type = Block
-
-/** You may write useful functions to abstract data from this object here, alternatively you may export those functions in a functional style */
-export class Wrapper {
-	data: Block
-	constructor( data : Block ) {
-		this.data = data
-	}
-}
-
-

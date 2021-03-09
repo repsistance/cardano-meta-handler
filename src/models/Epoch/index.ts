@@ -27,11 +27,3 @@ type Epoch = {
 }
 
 export type Type = Epoch
-/** For OOP of functions related to these objects use this class, but preferably just export functions that receive an object of type Epoch as a param */
-export class Wrapper {
-	data: Epoch
-	constructor( data : Epoch ) {
-		this.data = data
-	}
-}
-

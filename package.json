@@ -33,7 +33,8 @@
     "mime-types": "^2.1.28",
     "openpgp": "^4.10.9",
     "pako": "^2.0.3",
-    "parse-uri": "^1.0.3"
+    "parse-uri": "^1.0.3",
+    "typed-curry": "^1.0.7"
   },
   "directories": {
     "example": "examples",
