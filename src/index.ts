@@ -24,7 +24,7 @@ const chunkArray = ( arr : string, size : number ) => {
     return myArray
 }
 
-export const buildHTTPMetadataFromURI = async ( uri : string, customHeaders : Headers, compressed : unknown ) => {
+export const buildHTTPMetadataFromURI = async ( uri : string, customHeaders : Headers, compressed : boolean ) => {
 
   const parsedUri = parseUri(uri)
   let response
@@ -148,12 +148,6 @@ export async function get( uri : string ) {
     default:
       return metadata
   }
-}
-
-export default {
-  buildHTTPMetadataFromURI,
-  get,
-  getMetadataFromTxId
 }
 
 export * as Fetch from './fetch'
