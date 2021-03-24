@@ -21,7 +21,7 @@ I've managed to use this library right in the same way than in the examples by f
 
 * Install npm package:
 ```
-npm i 
+npm i @repsistance/cardano-meta-handler
 ```
 * Snippet:
 ```
