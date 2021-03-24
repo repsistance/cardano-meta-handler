@@ -15,6 +15,24 @@ npm install
 npm run build
 ```
 
+# Usage from React
+
+I've managed to use this library right in the same way than in the examples by from a React app. For that you just need to:
+
+* Install npm package:
+```
+npm i 
+```
+* Snippet:
+```
+import cardanoMetaHandler from '@repsistance/cardano-meta-handler'
+
+const uri = "metadata+cardano://2065e342de1748dd69788f71e7816b61b0e93da942a87a5a334d6a9a3defdc2a?network=testnet&key=104116116112&type=http-response"
+const request = await cardanoMetaHandler.get(uri);
+
+console.log(request.data);
+```
+
 # Run by examples
 
 ```
