@@ -35,7 +35,7 @@ export async function buildHTTPMetadataFromURI(uri, customHeaders, compressed) {
  
   switch (parsedUri.protocol) {
     case 'file':
-      response = { headers: headers, data: fs.readFileSync(parsedUri.path, 'utf-8') }
+      response = { headers: headers, data: fs.readFileSync(parsedUri.path) }
       if ( ! headers['Content-Type'] ) {
         headers['Content-Type'] = mime.lookup(parsedUri.path)
       }
@@ -52,11 +52,12 @@ export async function buildHTTPMetadataFromURI(uri, customHeaders, compressed) {
 
   if ( compressed ) {
     headers['Content-Encoding'] = "gzip"
-    var binData = pako.gzip(JSON.stringify(response.data))
+    var binData = pako.gzip(response.data)
     var strData = String.fromCharCode.apply(null, new Uint16Array(binData))
-    b64data = chunkArray(btoa(strData), 64)
+    b64data = chunkArray(btoa(binData), 64)
   } else {
-    b64data = chunkArray(response.data, 64)
+    b64data = chunkArray(new Buffer(response.data).toString('base64'), 64);
+//    b64data = chunkArray(btoa(response.data), 64)
   }
 
   metadataObj[HTTP_RESPONSE_METADATUM] = { headers: headers, response: { data: b64data } }
@@ -102,6 +103,7 @@ export async function get(uri) {
       } else {
         if ( metadata.headers['Content-Transfer-Encoding'] == "base64" ) {
           strData = atob(jointData)
+          strData = jointData
         } else {
           strData = jointData
         }
