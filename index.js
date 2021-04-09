@@ -27,6 +27,7 @@ export async function buildHTTPMetadataFromURI(uri, customHeaders, compressed) {
   const parsedUri = parseUri(uri)
   var response
   var b64data = ''
+  var dataLength = 0
   var metadataObj = {}
   var headers = {}
   if ( customHeaders ) {
@@ -56,18 +57,70 @@ export async function buildHTTPMetadataFromURI(uri, customHeaders, compressed) {
     var strData = String.fromCharCode.apply(null, new Uint16Array(binData))
     b64data = chunkArray(btoa(binData), 64)
   } else {
-    b64data = chunkArray(new Buffer(response.data).toString('base64'), 64);
-//    b64data = chunkArray(btoa(response.data), 64)
+    const fullb64 = new Buffer.from(response.data).toString('base64')
+    dataLength = fullb64.length
+    b64data = chunkArray(fullb64, 64)
   }
 
-  metadataObj[HTTP_RESPONSE_METADATUM] = { headers: headers, response: { data: b64data } }
-  return metadataObj
+  const dataMaxSize = 14000
+
+  let ntimes = dataLength/dataMaxSize;
+  let metadataFiles = []
+  if ( ntimes > 1 )
+  {
+    // split data in diff txs
+    let _nextTx = "_PLACEHOLDER_";
+    let totalParts = b64data.length;
+    let sizePerPart = totalParts/ntimes;
+    for (let i=0; i<ntimes;i++){
+      metadataObj = {}
+      let dataSlice = b64data.slice(i,i+sizePerPart);
+      metadataObj[HTTP_RESPONSE_METADATUM] = { _nextTx: _nextTx, headers: headers, response: { data: dataSlice } }
+      metadataFiles.push(metadataObj)
+    }
+  }
+  else{
+    metadataObj[HTTP_RESPONSE_METADATUM] = { headers: headers, response: { data: b64data } }
+  }
+
+  return metadataFiles
 }
 
 export async function getMetadataFromTxId(txId, metadataKey, grapqhlEndpoint) {
   var graphqlQuery = `{ transactions( where: { hash: { _eq: "${txId}" }, metadata: { key: { _eq: "${metadataKey}" } } } ) { metadata { value } } }`
-  const response = await axios.post(grapqhlEndpoint, { query: graphqlQuery })
-  return response.data.data.transactions[0].metadata[0].value
+  //var response = await axios.post(grapqhlEndpoint, { query: graphqlQuery })
+
+  axios.post(grapqhlEndpoint, { query: graphqlQuery }).then(r => {
+    var fullData = []
+    var actualData = r.data.data.transactions[0].metadata[0].value.response.data
+    var completeResponse = {}
+    var keepGoing = true;
+    fullData = fullData.concat(actualData);
+    let counter = 0;
+    while(keepGoing) {
+      graphqlQuery = `{ transactions( where: { hash: { _eq: "${r.data.data.transactions[0].metadata[0].value._nextTx}" }, metadata: { key: { _eq: "${metadataKey}" } } } ) { metadata { value } } }`
+      //response = await axios.post(grapqhlEndpoint, { query: graphqlQuery })
+
+      axios.post(grapqhlEndpoint, { query: graphqlQuery }).then(r => {
+        actualData = r.data.data.transactions[0].metadata[0].value.response.data
+        console.log(counter +' => ' + actualData)
+        console.log(counter +' => ' + actualData._nextTx)
+        if(actualData._nextTx == undefined) {
+          keepGoing = false;
+        }
+        counter++;
+      })
+    }
+    
+    console.log(counter +' => ' + fullData[fullData.length-1]);
+    completeResponse = r.data.data.transactions[0].metadata[0].value
+    completeResponse.response.data = fullData
+    //console.log(completeResponse)
+    return completeResponse
+  })
+
+  
+  return false;
 }
 
 export async function get(uri) {
